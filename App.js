@@ -4,6 +4,7 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react
 import * as ImagePicker from 'expo-image-picker';
 import * as Sharing from 'expo-sharing';
 import uploadToAnonymousFilesAsync from 'anonymous-files';
+import Splash from './src/components/Splash'
 
 export default function App() {
 
@@ -58,6 +59,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Splash />
 
       <Image source={{ uri: "https://i.imgur.com/TkIrScD.png" }} style={styles.logo} />
 

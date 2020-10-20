@@ -34,14 +34,14 @@ export default class App extends React.Component {
   };
 
   render() {
-    if (!this.state.appIsReady) {
-      return null;
-    }
+    return null;
   }
 }
 
 // Put any code you need to prepare your app in these functions
-async function performAPICalls() {}
+async function performAPICalls() {
+  return new Promise(resolve => setTimeout(resolve, 2000))
+}
 async function downloadAssets() {}
 
 const styles = StyleSheet.create({
