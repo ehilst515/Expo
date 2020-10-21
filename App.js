@@ -15,10 +15,39 @@ function AboutScreen() {
   );
 }
 
+function ImageScreen({ route, navigation }){
+  console.log(route);
+  const { selectedImage } = route.params;
+
+  let openShareDialogAsync = async () => {
+    if (!(await Sharing.isAvailableAsync())) {
+      alert(`The image is available for sharing at: ${selectedImage.remoteUri}`);
+      return;
+    }
+
+    await Sharing.shareAsync(selectedImage.localUri);
+  };
+
+  return (
+    <>
+      <View style={styles.container}>
+      <Button
+      title="Return Home"
+      onPress={() => navigation.navigate('Home')}
+    />
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={styles.thumbnail}
+        />
+        <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
+          <Text style={styles.buttonText}>Share this photo</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+}
+
 function HomeScreen({ navigation }) {
-
-  const [selectedImage, setSelectedImage] = React.useState(null);
-
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
@@ -33,42 +62,13 @@ function HomeScreen({ navigation }) {
       return;
     }
 
+    let selectedImage = { localUri: pickerResult.uri, remoteUri: null };
     if (Platform.OS === 'web') {
       let remoteUri = await uploadToAnonymousFilesAsync(pickerResult.uri);
-      setSelectedImage({ localUri: pickerResult.uri, remoteUri });
-    } else {
-      setSelectedImage({ localUri: pickerResult.uri, remoteUri: null });
+      remoteUri = selectedImage;
     }
+    navigation.navigate('Image', { selectedImage })
   };
-
-  let openShareDialogAsync = async () => {
-    if (!(await Sharing.isAvailableAsync())) {
-      alert(`The image is available for sharing at: ${selectedImage.remoteUri}`);
-      return;
-    }
-
-    await Sharing.shareAsync(selectedImage.localUri);
-  };
-
-  if (selectedImage !== null) {
-    return (
-      <>
-        <View style={styles.container}>
-        <Button
-        title="Return Home"
-        onPress={() => navigation.navigate('Home')}
-      />
-          <Image
-            source={{ uri: selectedImage.localUri }}
-            style={styles.thumbnail}
-          />
-          <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
-            <Text style={styles.buttonText}>Share this photo</Text>
-          </TouchableOpacity>
-        </View>
-      </>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -134,6 +134,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Image" component={ImageScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
