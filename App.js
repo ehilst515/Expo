@@ -54,6 +54,10 @@ function HomeScreen({ navigation }) {
     return (
       <>
         <View style={styles.container}>
+        <Button
+        title="Return Home"
+        onPress={() => navigation.navigate('Home')}
+      />
           <Image
             source={{ uri: selectedImage.localUri }}
             style={styles.thumbnail}
@@ -128,7 +132,7 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
       </Stack.Navigator>
