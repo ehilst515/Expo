@@ -40,7 +40,7 @@ export default class App extends React.Component {
 
 // Put any code you need to prepare your app in these functions
 async function performAPICalls() {
-  return new Promise(resolve => setTimeout(resolve, 2000))
+  return new Promise(resolve => setTimeout(resolve, 1000))
 }
 async function downloadAssets() {}
 
