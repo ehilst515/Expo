@@ -1,12 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Sharing from 'expo-sharing';
 import uploadToAnonymousFilesAsync from 'anonymous-files';
-import Splash from './src/components/Splash'
+import Splash from './src/components/Splash';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import About from './src/components/About';
 
-export default function App() {
+function AboutScreen() {
+  return(
+    <About />
+  );
+}
+
+function HomeScreen({ navigation }) {
 
   const [selectedImage, setSelectedImage] = React.useState(null);
 
@@ -44,15 +53,15 @@ export default function App() {
   if (selectedImage !== null) {
     return (
       <>
-          <View style={styles.container}>
-            <Image
-              source={{ uri: selectedImage.localUri }}
-              style={styles.thumbnail}
-            />
-            <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
-              <Text style={styles.buttonText}>Share this photo</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.container}>
+          <Image
+            source={{ uri: selectedImage.localUri }}
+            style={styles.thumbnail}
+          />
+          <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
+            <Text style={styles.buttonText}>Share this photo</Text>
+          </TouchableOpacity>
+        </View>
       </>
     );
   }
@@ -60,6 +69,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Splash />
+
+      <Button
+        title="Go to About"
+        onPress={() => navigation.navigate('About')}
+      />
 
       <Image source={{ uri: "https://i.imgur.com/TkIrScD.png" }} style={styles.logo} />
 
@@ -108,3 +122,18 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   }
 });
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
